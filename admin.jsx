@@ -552,9 +552,7 @@ function NotifDropdown({
 }
 
 // ── Sidebar ──
-function Sidebar({ tab, setTab }) {
-  const [sidebarOpen, setSidebarOpen] = useState(true);
-
+function Sidebar({ tab, setTab, isOpen, onClose }) {
   const navItems = [
     { id: "dashboard", Icon: IcoDashboard, label: "Dashboard" },
     { id: "qr", Icon: IcoQR, label: "QR Code" },
@@ -566,55 +564,66 @@ function Sidebar({ tab, setTab }) {
   ];
 
   return (
-    <aside className="ta-sidebar">
-      <div className="ta-sidebar__logo">
-        <div className="ta-sidebar__logo-mark">
-          <svg
-            width="22"
-            height="22"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="white"
-            strokeWidth="2.2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <rect x="3" y="3" width="7" height="7" rx="1.5" />
-            <rect x="14" y="3" width="7" height="7" rx="1.5" />
-            <rect x="3" y="14" width="7" height="7" rx="1.5" />
-            <rect x="14" y="14" width="7" height="7" rx="1.5" />
-          </svg>
-        </div>
-        <span className="ta-sidebar__logo-text">Admin Panel</span>
-      </div>
+    <>
+      {/* Backdrop — only visible on mobile when sidebar is open */}
+      {isOpen && (
+        <div className="ta-sidebar-backdrop" onClick={onClose} />
+      )}
 
-      <nav className="ta-sidebar__nav">
-        <p className="ta-sidebar__section-label">MENU</p>
-        {navItems.map(({ id, Icon, label }) => (
-          <button
-            key={id}
-            className={`ta-sidebar__item ${tab === id ? "active" : ""}`}
-            onClick={() => setTab(id)}
-          >
-            <Icon />
-            <span>{label}</span>
+      <aside className={`ta-sidebar${isOpen ? " ta-sidebar--open" : ""}`}>
+        <div className="ta-sidebar__logo">
+          <div className="ta-sidebar__logo-mark">
+            <svg
+              width="22"
+              height="22"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="white"
+              strokeWidth="2.2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <rect x="3" y="3" width="7" height="7" rx="1.5" />
+              <rect x="14" y="3" width="7" height="7" rx="1.5" />
+              <rect x="3" y="14" width="7" height="7" rx="1.5" />
+              <rect x="14" y="14" width="7" height="7" rx="1.5" />
+            </svg>
+          </div>
+          <span className="ta-sidebar__logo-text">Admin Panel</span>
+          {/* Close button — only shown on mobile */}
+          <button className="ta-sidebar__close" onClick={onClose} title="Close menu">
+            <IcoClose />
           </button>
-        ))}
-      </nav>
+        </div>
 
-      {/* Support nav */}
-      <nav className="ta-sidebar__nav ta-sidebar__nav--bottom">
-        <p className="ta-sidebar__section-label">SUPPORT</p>
-        <button className="ta-sidebar__item">
-          <IcoCalendar />
-          <span>Calendar</span>
-        </button>
-        <button className="ta-sidebar__item">
-          <IcoUser />
-          <span>User Profile</span>
-        </button>
-      </nav>
-    </aside>
+        <nav className="ta-sidebar__nav">
+          <p className="ta-sidebar__section-label">MENU</p>
+          {navItems.map(({ id, Icon, label }) => (
+            <button
+              key={id}
+              className={`ta-sidebar__item ${tab === id ? "active" : ""}`}
+              onClick={() => { setTab(id); onClose(); }}
+            >
+              <Icon />
+              <span>{label}</span>
+            </button>
+          ))}
+        </nav>
+
+        {/* Support nav */}
+        <nav className="ta-sidebar__nav ta-sidebar__nav--bottom">
+          <p className="ta-sidebar__section-label">SUPPORT</p>
+          <button className="ta-sidebar__item">
+            <IcoCalendar />
+            <span>Calendar</span>
+          </button>
+          <button className="ta-sidebar__item">
+            <IcoUser />
+            <span>User Profile</span>
+          </button>
+        </nav>
+      </aside>
+    </>
   );
 }
 
@@ -680,16 +689,17 @@ function Topbar({
   onOrderClick,
   onEditInfo,
   onLogout,
+  onToggleSidebar,
 }) {
   const [profileOpen, setProfileOpen] = useState(false);
 
   return (
     <header className="ta-topbar">
-      <button className="ta-topbar__hamburger">
+      <button className="ta-topbar__hamburger" onClick={onToggleSidebar} title="Toggle menu">
         <IcoMenu />
       </button>
 
-      <div className="ta-topbar__search">
+      {/* <div className="ta-topbar__search">
         <IcoSearch />
         <input
           type="text"
@@ -698,7 +708,7 @@ function Topbar({
           readOnly
         />
         <kbd className="ta-topbar__kbd">⌘K</kbd>
-      </div>
+      </div> */}
 
       <div className="ta-topbar__right">
         {savedMsg && <span className="ta-topbar__saved">✓ Saved</span>}
@@ -789,6 +799,7 @@ export default function AdminPanel({ onPreview, onLogout }) {
   const [saveError, setSaveError] = useState("");
   const [editRestaurant, setEditRestaurant] = useState(false);
   const [restForm, setRestForm] = useState({});
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [orders, setOrders] = useState([]);
   const [reviews, setReviews] = useState([]);
   // ── Notification state ──
@@ -996,7 +1007,12 @@ export default function AdminPanel({ onPreview, onLogout }) {
     <>
       <div className="ta-shell">
         {/* ── Sidebar ── */}
-        <Sidebar tab={tab} setTab={setTab} />
+        <Sidebar
+          tab={tab}
+          setTab={setTab}
+          isOpen={sidebarOpen}
+          onClose={() => setSidebarOpen(false)}
+        />
 
         {/* ── Main area ── */}
         <div className="ta-main">
@@ -1010,6 +1026,7 @@ export default function AdminPanel({ onPreview, onLogout }) {
             onToggleNotif={handleToggleNotif}
             onMarkAllRead={handleMarkAllRead}
             onOrderClick={setSelectedOrder}
+            onToggleSidebar={() => setSidebarOpen((o) => !o)}
             onEditInfo={() => {
               setRestForm({
                 name: data.name,

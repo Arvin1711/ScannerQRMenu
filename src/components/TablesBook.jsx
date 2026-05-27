@@ -112,23 +112,31 @@ function Toggle({ checked, onChange, disabled }) {
   );
 }
 
-// ── Bulk Segmented Control ─────────────────────────────────────────────────
+// ── Bulk Pill Toggle ───────────────────────────────────────────────────────
 function BulkToggle({ allEnabled, noneEnabled, onEnableAll, onDisableAll }) {
+  // "on" = all enabled, "off" = all disabled, "mixed" = partial
+  const state = allEnabled ? "on" : noneEnabled ? "off" : "mixed";
+
   return (
-    <div className="tb-seg">
+    <div className={`tb-bulk-toggle tb-bulk-toggle--${state}`} role="group" aria-label="Bulk table toggle">
+      {/* Sliding pill indicator */}
+      <div className="tb-bulk-toggle__pill" aria-hidden="true" />
+
       <button
-        className={`tb-seg__btn tb-seg__btn--enable ${allEnabled ? "tb-seg__btn--active" : ""}`}
+        className="tb-bulk-toggle__opt tb-bulk-toggle__opt--left"
         onClick={onEnableAll}
         disabled={allEnabled}
+        title="Enable all tables"
       >
         <IcoCheck />
         <span>Enable All</span>
       </button>
-      <div className="tb-seg__divider" />
+
       <button
-        className={`tb-seg__btn tb-seg__btn--disable ${noneEnabled ? "tb-seg__btn--active-off" : ""}`}
+        className="tb-bulk-toggle__opt tb-bulk-toggle__opt--right"
         onClick={onDisableAll}
         disabled={noneEnabled}
+        title="Disable all tables"
       >
         <IcoBan />
         <span>Disable All</span>
@@ -356,29 +364,37 @@ export default function TablesBook({ tables = [], menuUrl = "", onToggle, onAdd,
               <rect x="3" y="6" width="18" height="3" rx="1"/><line x1="7" y1="9" x2="7" y2="18"/><line x1="17" y1="9" x2="17" y2="18"/><line x1="5" y1="18" x2="9" y2="18"/><line x1="15" y1="18" x2="19" y2="18"/>
             </svg>
           </div>
-          <span className="tb-stat__val">{tables.length}</span>
-          <span className="tb-stat__label">Total</span>
+          <span className="tb-stat__val">
+            <span className="tb-stat__label">Total</span>
+            {tables.length}
+          </span>
+          
         </div>
         <div className="tb-stat tb-stat--available">
           <div className="tb-stat__icon">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
           </div>
-          <span className="tb-stat__val">{available}</span>
-          <span className="tb-stat__label">Available</span>
+          <span className="tb-stat__val">
+            <span className="tb-stat__label">Available</span>
+            {available}</span>
         </div>
         <div className="tb-stat tb-stat--booked">
           <div className="tb-stat__icon">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
           </div>
-          <span className="tb-stat__val">{booked}</span>
-          <span className="tb-stat__label">Booked</span>
+          <span className="tb-stat__val">
+            <span className="tb-stat__label">Booked</span>
+            {booked}
+          </span>
         </div>
         <div className="tb-stat tb-stat--disabled">
           <div className="tb-stat__icon">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
           </div>
-          <span className="tb-stat__val">{disabled}</span>
-          <span className="tb-stat__label">Disabled</span>
+          <span className="tb-stat__val">
+            <span className="tb-stat__label">Disabled</span>
+            {disabled}
+          </span>
         </div>
       </div>
 

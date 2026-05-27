@@ -101,10 +101,7 @@
   @media (max-width: 900px) {
     grid-template-columns: repeat(2, 1fr);
   }
-
-  @media (max-width: 560px) {
-    grid-template-columns: 1fr;
-  }
+  // 2-col is comfortable all the way down to phones — no single-col override needed
 }
 
 .ta-stat-card {
@@ -214,5 +211,98 @@
     color: #0f172a;
     font-weight: 500;
     // box-shadow: 0 1px 4px rgba(15, 23, 42, 0.1), 0 0 0 1px rgba(15, 23, 42, 0.04);
+  }
+}
+
+// ────────────────────────────────────────────────────
+// Mobile responsive — DashboardHome
+// ────────────────────────────────────────────────────
+@media (max-width: 768px) {
+  // Reduce outer padding
+  .ta-dashboard {
+    padding: 16px 14px;
+    gap: 14px;
+  }
+
+  // Header: stack title and buttons vertically
+  .ta-dash-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .ta-dash-header__title {
+    font-size: 18px;
+  }
+
+  // Buttons row spans full width, both buttons grow equally
+  .ta-dash-header__right {
+    width: 100%;
+
+    .ui-btn {
+      flex: 1;
+      justify-content: center;
+    }
+  }
+
+  // Stat cards — compact padding on mobile
+  .ta-stat-cards {
+    gap: 10px;
+  }
+
+  .ta-stat-card {
+    padding: 14px 12px;
+    gap: 10px;
+  }
+
+  .ta-stat-card__icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 10px;
+  }
+
+  .ta-stat-card__label {
+    font-size: 12px;
+    margin-bottom: 3px;
+  }
+
+  .ta-stat-card__value {
+    font-size: 20px;
+  }
+
+  // Charts — shrink gap on mobile
+  .ta-row--charts {
+    gap: 12px;
+  }
+
+  .ta-chart-card {
+    padding: 14px 14px 10px;
+  }
+
+  // View toggle buttons — slightly smaller
+  .ta-chart-view-btn {
+    padding: 5px 11px;
+    font-size: 11px;
+  }
+}
+
+// Very small phones — 2-col stat cards stay but even more compact
+@media (max-width: 380px) {
+  .ta-stat-card {
+    padding: 12px 10px;
+    gap: 8px;
+  }
+
+  .ta-stat-card__icon {
+    width: 36px;
+    height: 36px;
+  }
+
+  .ta-stat-card__value {
+    font-size: 18px;
+  }
+
+  .ta-stat-card__label {
+    font-size: 11px;
   }
 }

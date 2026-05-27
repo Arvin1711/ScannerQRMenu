@@ -205,6 +205,9 @@ export default function UnemploymentChart({ orders = [] }) {
         {
           condition: { maxWidth: 500 },
           chartOptions: {
+            chart: { height: 280 },
+            title: { style: { fontSize: "12px" } },
+            subtitle: { style: { fontSize: "9px" } },
             legend: {
               floating: false,
               layout: "horizontal",

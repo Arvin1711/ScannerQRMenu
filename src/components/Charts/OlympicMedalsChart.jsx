@@ -74,6 +74,18 @@ export default function OlympicMedalsChart({ data = { items: [], categories: [] 
       { name: "Orders",      data: [0,            ordersCount,  0] },
       { name: "Categories",  data: [0,            0,            categories] },
     ],
+    responsive: {
+      rules: [
+        {
+          condition: { maxWidth: 500 },
+          chartOptions: {
+            chart: { height: 260 },
+            title: { style: { fontSize: "12px" } },
+            subtitle: { style: { fontSize: "9px" } },
+          },
+        },
+      ],
+    },
     credits: { enabled: false },
   };
 

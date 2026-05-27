@@ -195,6 +195,10 @@ $hp-background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
     &:hover {
       background: $hp-light2;
     }
+
+    @media (max-width: 480px) {
+      padding: 10px 12px;
+    }
   }
 
   &__getstarted {
@@ -209,6 +213,10 @@ $hp-background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
 
     &:hover {
       background: $hp-purple-light;
+    }
+
+    @media (max-width: 480px) {
+      padding: 10px 12px;
     }
   }
 
@@ -227,7 +235,7 @@ $hp-background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
     overflow: visible;
 
     @media (max-width: 768px) {
-      padding: 48px 20px 0;
+      padding: 100px 20px 0;
     }
   }
 
@@ -350,6 +358,13 @@ $hp-background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
     justify-content: center;
     max-width: 620px;
     margin: 0 auto;
+
+    @media (max-width: 600px) {
+      max-width: 100%;
+      transform: scale(0.62);
+      transform-origin: top center;
+      margin-bottom: -120px;
+    }
   }
 
   &__phone {
@@ -422,6 +437,10 @@ $hp-background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
     color: $hp-dark;
     margin: 0;
     letter-spacing: -0.01em;
+
+    @media (max-width: 600px) {
+      font-size: 20px;
+    }
   }
 
   &__stats-grid {
@@ -493,6 +512,11 @@ $hp-background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
     gap: 64px;
     padding: 46px 48px;
     flex-shrink: 0;
+
+    @media (max-width: 600px) {
+      gap: 36px;
+      padding: 32px 24px;
+    }
   }
 
   &__brand {
@@ -847,6 +871,10 @@ $hp-background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
   &__faq-left {
     position: sticky;
     top: 80px;
+
+    @media (max-width: 900px) {
+      position: static;
+    }
   }
 
   &__faq-badge {

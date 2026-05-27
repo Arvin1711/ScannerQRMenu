@@ -6,6 +6,7 @@
   padding: 24px 24px 0;
   flex-direction: column;
 }
+
 .categories-title {
   margin: 0;
 }
@@ -98,6 +99,80 @@
 
     &:hover {
       background: #ffe4e6;
+    }
+  }
+}
+
+// ─────────────────────────────────────────────────────────────
+// Mobile Responsive — MenuCategories
+// ─────────────────────────────────────────────────────────────
+
+@media (max-width: 768px) {
+  .ta-content .categories-header {
+    padding: 16px 14px 0;
+    gap: 8px;
+  }
+
+  .ta-content .categories-list {
+    padding: 10px 14px 16px;
+  }
+
+  .categories-add-form {
+    justify-content: flex-start;
+
+    input {
+      max-width: 100%;
+      flex: 1;
+    }
+  }
+
+
+  .category-item {
+    padding: 10px 12px;
+
+    .cat-info {
+      gap: 8px;
+      min-width: 0;
+
+      .cat-name {
+        font-size: 13.5px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .cat-stats {
+        font-size: 11.5px;
+        white-space: nowrap;
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+
+  .ta-content .categories-header {
+    padding: 14px 12px 0;
+  }
+
+  .ta-content .categories-list {
+    padding: 10px 12px 14px;
+  }
+
+  .categories-add-form {
+    flex-direction: row;
+    gap: 8px;
+
+    input {
+      // max-width: 100%;
+      // width: 100%;
+      flex: 1;
+    }
+
+    .ui-btn {
+      // width: 100%;
+      font-size: 12px;
+      justify-content: center;
     }
   }
 }

@@ -71,6 +71,18 @@ const options = {
       ],
     },
   ],
+  responsive: {
+    rules: [
+      {
+        condition: { maxWidth: 500 },
+        chartOptions: {
+          chart: { height: 260 },
+          title: { style: { fontSize: "12px" } },
+          subtitle: { style: { fontSize: "9px" } },
+        },
+      },
+    ],
+  },
   credits: { enabled: false },
 };
 

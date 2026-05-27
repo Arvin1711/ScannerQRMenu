@@ -114,7 +114,7 @@ export default function Login({ onSwitch, onSuccess }) {
         </form>
 
         {/* Default credentials hint */}
-        <div className="auth-hint-wrap" style={{display:'none'}}>
+        <div className="auth-hint-wrap">
           <button className="auth-hint-toggle" onClick={() => setShowHint((v) => !v)}>
             {showHint ? "Hide" : "Show"} default credentials
           </button>

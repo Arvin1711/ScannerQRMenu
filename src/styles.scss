@@ -3307,6 +3307,33 @@ $ta-sidebar-label: rgba(255, 255, 255, 0.35);
   }
 }
 
+// ── Sidebar close button (mobile only) ──
+.ta-sidebar__close {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.85);
+  border-radius: 8px;
+  cursor: pointer;
+  margin-left: auto;
+  flex-shrink: 0;
+  transition: background 0.15s;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.22);
+    color: #fff;
+  }
+}
+
+// ── Sidebar overlay backdrop (mobile only) ──
+.ta-sidebar-backdrop {
+  display: none;
+}
+
 // ── Main area ──
 .ta-main {
   flex: 1;
@@ -3314,6 +3341,76 @@ $ta-sidebar-label: rgba(255, 255, 255, 0.35);
   flex-direction: column;
   overflow: hidden;
   background: #f1f5f9;
+}
+
+// ────────────────────────────────────────────────────
+// Mobile responsive sidebar
+// ────────────────────────────────────────────────────
+@media (max-width: 768px) {
+  // Sidebar becomes a fixed overlay panel
+  .ta-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 260px;
+    height: 100vh;
+    z-index: 1000;
+    transform: translateX(-100%);
+    transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+                box-shadow 0.3s ease;
+    box-shadow: none;
+
+    // Slide in when open
+    &.ta-sidebar--open {
+      transform: translateX(0);
+      box-shadow: 8px 0 40px rgba(15, 23, 42, 0.35);
+    }
+  }
+
+  // Show close button on mobile
+  .ta-sidebar__close {
+    display: flex;
+  }
+
+  // Show backdrop when sidebar is open
+  .ta-sidebar-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.5);
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+    z-index: 999;
+    animation: backdrop-fade-in 0.25s ease;
+
+    @keyframes backdrop-fade-in {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+  }
+
+  // Make topbar search smaller / hide kbd shortcut
+  .ta-topbar__search {
+    max-width: none;
+  }
+
+  .ta-topbar__kbd {
+    display: none;
+  }
+
+  // Hide username text on very small screens
+  .ta-topbar__username {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  // Collapse search bar placeholder on very small phones
+  .ta-topbar__search-input {
+    &::placeholder {
+      content: "Search…";
+    }
+  }
 }
 
 // ── Top bar ──
@@ -3331,7 +3428,7 @@ $ta-sidebar-label: rgba(255, 255, 255, 0.35);
 }
 
 .ta-topbar__hamburger {
-  display: flex;
+  display: flex; // shown on mobile; hidden on desktop via min-width query below
   align-items: center;
   justify-content: center;
   width: 36px;
@@ -3347,6 +3444,20 @@ $ta-sidebar-label: rgba(255, 255, 255, 0.35);
   &:hover {
     background: #f1f5f9;
     color: #0f172a;
+  }
+}
+
+// Hide hamburger on desktop
+@media (min-width: 769px) {
+  .ta-topbar__hamburger {
+    display: none;
+  }
+}
+
+// Hide search bar on mobile
+@media (max-width: 768px) {
+  .ta-topbar__search {
+    display: none;
   }
 }
 
