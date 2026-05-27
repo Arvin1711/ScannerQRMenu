@@ -1,0 +1,164 @@
+// ── QRTab — QR Code Tab ───────────────────────────────────────────────────────
+
+// ── QR Tab ──
+.qr-section {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  padding: 24px;
+}
+
+.qr-card {
+  background: #fff;
+  border-radius: 6px;
+  padding: 28px 24px 22px;
+  text-align: center;
+
+  p { margin: 0; }
+
+  .qr-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #475569;
+    margin: 16px 0 4px;
+  }
+
+  .qr-url {
+    font-size: 11px;
+    color: #94a3b8;
+    word-break: break-all;
+    max-width: 200px;
+    line-height: 1.5;
+  }
+}
+
+.qr-canvas {
+  width: 200px;
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  border-radius: 12px;
+  border: 1.5px solid #e2e8f0;
+  padding: 8px;
+  box-sizing: border-box;
+  margin: 0 auto;
+}
+
+.qr-download-btn {
+  display: block;
+  width: 100%;
+  margin-top: 18px;
+  padding: 9px 0;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 9px;
+  cursor: pointer;
+  border: 1.5px solid #e2e8f0;
+  background: #f8fafc;
+  color: #475569;
+  transition: all 0.15s ease;
+
+  &:hover {
+    background: #3b82f6;
+    border-color: #3b82f6;
+    color: #fff;
+    box-shadow: 0 2px 10px rgba(59, 130, 246, 0.3);
+  }
+}
+
+.qr-instructions {
+  flex: 1;
+  min-width: 220px;
+  background: #fff;
+  border-radius: 6px;
+  padding: 24px;
+
+  .instructions-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #0f172a;
+    margin: 0 0 20px;
+  }
+}
+
+.instruction-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.instruction-step {
+  display: flex;
+  gap: 14px;
+  margin-bottom: 18px;
+
+  .step-number {
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    background: #eff6ff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+    color: #3b82f6;
+    flex-shrink: 0;
+  }
+
+  .step-content {
+    p {
+      margin: 0;
+      font-size: 12px;
+      color: #64748b;
+      line-height: 1.5;
+
+      &:first-child {
+        font-size: 13.5px;
+        font-weight: 600;
+        color: #0f172a;
+        margin-bottom: 3px;
+      }
+    }
+  }
+}
+
+.stats-row {
+  display: flex;
+  gap: 10px;
+  margin-top: 22px;
+  border-top: 1.5px solid #f1f5f9;
+  padding-top: 20px;
+
+  .stat-box {
+    flex: 1;
+    background: #f8fafc;
+    border-radius: 12px;
+    padding: 20px 20px;
+    text-align: center;
+    flex-direction: row;
+    display: flex;
+    gap: 10px;
+    align-items: baseline;
+
+    .stat-value {
+      font-size: 24px;
+      font-weight: 800;
+      margin: 0;
+      color: #0f172a;
+      letter-spacing: -0.04em;
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: #94a3b8;
+      margin: 4px 0 0;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+  }
+}

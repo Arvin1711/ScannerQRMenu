@@ -1,0 +1,1035 @@
+@use "sass:color";
+
+// ── TablesBook — Table Management Panel ───────────────────────────────────
+
+$tb-accent:       #6366f1;
+$tb-accent-light: #eef2ff;
+$tb-accent-dark:  #4f46e5;
+$tb-green:        #16a34a;
+$tb-green-light:  #dcfce7;
+$tb-green-mid:    #14a148;
+$tb-red:          #ef4444;
+$tb-red-light:    #fee2e2;
+$tb-amber:        #d97706;
+$tb-amber-mid:    #f59e0b;
+$tb-amber-light:  #fef3c7;
+$tb-slate:        #64748b;
+$tb-slate-light:  #f1f5f9;
+$tb-surface:      #ffffff;
+$tb-bg:           #f8fafc;
+$tb-border:       #e2e8f0;
+$tb-text:         #0f172a;
+$tb-text-2:       #334155;
+$tb-text-muted:   #64748b;
+$tb-radius:       18px;
+$tb-radius-md:    12px;
+$tb-radius-sm:    8px;
+$tb-font:         Inter, ui-sans-serif, system-ui, sans-serif;
+
+// ── Root ──────────────────────────────────────────────────────────────────
+.tb-root {
+  font-family: $tb-font;
+  padding: 32px 28px 48px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  max-width: 1200px;
+}
+
+// ── Page Header ───────────────────────────────────────────────────────────
+.tb-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+
+  &__title {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: $tb-text;
+    margin: 0 0 3px;
+    letter-spacing: -0.03em;
+  }
+
+  &__sub {
+    font-size: 0.82rem;
+    color: $tb-text-muted;
+    margin: 0;
+    font-weight: 400;
+  }
+}
+
+// ── Stat Chips ────────────────────────────────────────────────────────────
+.tb-stats {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.tb-stat {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 18px;
+  border-radius: $tb-radius-md;
+  background: $tb-surface;
+  flex: 1;
+  min-width: 120px;
+
+  &__icon {
+    width: 34px;
+    height: 34px;
+    border-radius: 9px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  &__val {
+    font-size: 1.55rem;
+    font-weight: 800;
+    color: $tb-text;
+    letter-spacing: -0.04em;
+    line-height: 1;
+  }
+
+  &__label {
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-top: 1px;
+  }
+
+  // Grouped val+label
+  &__val + &__label { display: block; }
+
+  &--total  { .tb-stat__icon { background: $tb-accent-light; color: $tb-accent; } .tb-stat__label { color: $tb-accent; } }
+  &--available { .tb-stat__icon { background: $tb-green-light; color: $tb-green; } .tb-stat__label { color: $tb-green; } }
+  &--booked    { .tb-stat__icon { background: $tb-amber-light; color: $tb-amber; } .tb-stat__label { color: $tb-amber; } }
+  &--disabled  { .tb-stat__icon { background: #f1f5f9; color: #94a3b8; } .tb-stat__label { color: #94a3b8; } }
+}
+
+// stack val + label
+.tb-stat__val,
+.tb-stat__label { display: block; }
+
+// ── Toolbar ───────────────────────────────────────────────────────────────
+.tb-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.tb-search {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: $tb-surface;
+  border-radius: $tb-radius-sm;
+  padding: 0 14px;
+  height: 42px;
+  flex: 1;
+  max-width: 340px;
+  transition: border-color 0.18s, box-shadow 0.18s;
+  color: $tb-text-muted;
+
+  &:focus-within {
+    border-color: $tb-accent;
+    box-shadow: 0 0 0 3px rgba($tb-accent, 0.1);
+  }
+
+  &__input {
+    border: none;
+    outline: none;
+    background: transparent;
+    font-family: $tb-font;
+    font-size: 0.85rem;
+    color: $tb-text;
+    flex: 1;
+    min-width: 0;
+    &::placeholder { color: #94a3b8; }
+  }
+
+  &__clear {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 3px;
+    color: #94a3b8;
+    display: flex;
+    align-items: center;
+    border-radius: 4px;
+    transition: color 0.15s;
+    &:hover { color: $tb-text; }
+  }
+}
+
+// ── Segmented Bulk Control ─────────────────────────────────────────────────
+.tb-seg {
+  display: flex;
+  align-items: stretch;
+  background: $tb-surface;
+  border: 1.5px solid $tb-border;
+  border-radius: $tb-radius-sm;
+  overflow: hidden;
+  box-shadow: 0 1px 4px rgba(15,23,42,0.05);
+  height: 42px;
+
+  &__divider {
+    width: 1px;
+    background: $tb-border;
+    flex-shrink: 0;
+  }
+
+  &__btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 0 18px;
+    border: none;
+    background: transparent;
+    font-family: $tb-font;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    color: $tb-text-muted;
+    transition: background 0.16s, color 0.16s;
+    white-space: nowrap;
+
+    svg { transition: color 0.16s; }
+
+    &:hover:not(:disabled) {
+      color: $tb-text;
+      background: $tb-bg;
+    }
+
+    &:disabled { cursor: not-allowed; opacity: 0.4; }
+    &:active:not(:disabled) { transform: scale(0.97); }
+
+    // Active: Enable All
+    &--enable.tb-seg__btn--active {
+      background: $tb-green-light;
+      color: $tb-green;
+      svg { stroke: $tb-green; }
+    }
+
+    // Active: Disable All
+    &--disable.tb-seg__btn--active-off {
+      background: $tb-red-light;
+      color: $tb-red;
+      svg { stroke: $tb-red; }
+    }
+  }
+}
+
+// ── Primary / Ghost Buttons ───────────────────────────────────────────────
+.tb-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 0 18px;
+  height: 42px;
+  border-radius: $tb-radius-sm;
+  font-family: $tb-font;
+  font-size: 0.84rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1.5px solid transparent;
+  transition: background 0.15s, box-shadow 0.15s, transform 0.1s;
+  white-space: nowrap;
+
+  &:active:not(:disabled) { transform: scale(0.97); }
+  &:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  &--primary {
+    background: $tb-accent;
+    color: #fff;
+    border-color: $tb-accent;
+    box-shadow: 0 2px 10px rgba($tb-accent, 0.25);
+
+    &:hover:not(:disabled) {
+      background: $tb-accent-dark;
+      border-color: $tb-accent-dark;
+      box-shadow: 0 4px 16px rgba($tb-accent, 0.38);
+    }
+  }
+}
+
+// ── Table Grid ────────────────────────────────────────────────────────────
+.tb-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 18px;
+}
+
+// ── Table Card ────────────────────────────────────────────────────────────
+.tb-card {
+  background: $tb-surface;
+  border-radius: $tb-radius;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+
+  // ── Top stripe ──
+  &__stripe {
+    height: 4px;
+    width: 100%;
+    flex-shrink: 0;
+  }
+
+  &--booked {
+    border-color: rgba($tb-amber-mid, 0.4);
+    background: #fffbf0;
+  }
+
+  &--disabled {
+    opacity: 0.9;
+    
+  }
+
+  // ── Header row: icon + info + delete ──
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 14px 14px;
+  }
+
+  &__icon {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+
+    &--available { background: $tb-accent-light; color: $tb-accent; }
+    &--booked    { background: $tb-amber-light;  color: $tb-amber; }
+    &--disabled  { background: #f1f5f9;           color: #94a3b8;  }
+  }
+
+  &__delete {
+    width: 28px;
+    height: 28px;
+    border-radius: 7px;
+    border: none;
+    background: transparent;
+    color: #ef4444;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-left: auto;
+    transition: background 0.15s, color 0.15s;
+
+    &:hover { background: $tb-red-light; color: $tb-red; }
+  }
+
+  // ── Info (name + status) ──
+  &__info {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__name {
+    font-size: 14px;
+    font-weight: 500;
+    color: $tb-text;
+    margin: 0;
+    cursor: default;
+    line-height: 1.2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &__rename {
+    font-family: $tb-font;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: $tb-text;
+    border: 1.5px solid $tb-accent;
+    border-radius: 6px;
+    padding: 4px 8px;
+    outline: none;
+    width: 100%;
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba($tb-accent, 0.1);
+  }
+
+  &__status {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.6rem;
+    font-weight: 500;
+    padding: 3px 9px;
+    border-radius: 99px;
+    width: fit-content;
+
+    &--available { background: $tb-green-light; color: $tb-green; }
+    &--booked    { background: $tb-amber-light;  color: $tb-amber; }
+    &--disabled  { background: #f1f5f9;           color: #94a3b8;  }
+  }
+
+  &__status-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: currentColor;
+    flex-shrink: 0;
+
+    &--pulse { animation: tb-dot-pulse 1.8s ease-in-out infinite; }
+  }
+
+  // ── Release Banner ──
+  &__release {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    margin: 0 14px 12px;
+    padding: 9px 14px;
+    border-radius: $tb-radius-sm;
+    border: 1.5px dashed rgba($tb-amber-mid, 0.6);
+    background: $tb-amber-light;
+    color: $tb-amber;
+    font-family: $tb-font;
+    font-size: 0.78rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s, transform 0.1s;
+
+    &:hover {
+      background: color.adjust($tb-amber-light, $lightness: -4%);
+      border-color: $tb-amber-mid;
+      transform: scale(0.99);
+    }
+  }
+
+  // ── Footer ──
+  &__footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 14px 14px;
+    border-top: 1px dashed #f2f2f2;
+    gap: 8px;
+    margin-top: auto;
+  }
+
+  &__qr {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: none;
+    border: 1.5px solid $tb-border;
+    border-radius: 7px;
+    padding: 5px 11px;
+    font-family: $tb-font;
+    font-size: 0.73rem;
+    font-weight: 600;
+    color: $tb-text-muted;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
+
+    &:hover {
+      background: $tb-accent-light;
+      color: $tb-accent;
+      border-color: rgba($tb-accent, 0.3);
+    }
+  }
+}
+
+// ── Toggle Switch ──────────────────────────────────────────────────────────
+.tb-toggle {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  flex-shrink: 0;
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.35;
+    pointer-events: none;
+  }
+
+  &__track {
+    display: block;
+    width: 26px;
+    height: 15px;
+    border-radius: 99px;
+    background: #e2e8f0;
+    position: relative;
+    transition: background 0.25s;
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.08);
+  }
+
+  &__thumb {
+    position: absolute;
+    top: 2.5px;
+    left: 2.5px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.22);
+    transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  &--on {
+    .tb-toggle__track {
+      background: $tb-green-mid;
+      animation: tb-toggle-glow 0.3s ease-out;
+    }
+
+    .tb-toggle__thumb {
+      transform: translateX(11px);
+    }
+  }
+}
+
+@keyframes tb-toggle-glow {
+  0%   { box-shadow: inset 0 1px 2px rgba(0,0,0,0.06), 0 0 0 0   rgba($tb-green-mid, 0.4); }
+  50%  { box-shadow: inset 0 1px 2px rgba(0,0,0,0.06), 0 0 0 4px rgba($tb-green-mid, 0.15); }
+  100% { box-shadow: inset 0 1px 2px rgba(0,0,0,0.06), 0 0 0 0   rgba($tb-green-mid, 0); }
+}
+
+@keyframes tb-dot-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.4; transform: scale(0.7); }
+}
+
+// ── Empty State ───────────────────────────────────────────────────────────
+.tb-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 72px 24px;
+  text-align: center;
+
+  &__art {
+    width: 80px;
+    height: 80px;
+    border-radius: 24px;
+    background: $tb-accent-light;
+    color: $tb-accent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 4px;
+  }
+
+  &__title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: $tb-text;
+    margin: 0;
+  }
+
+  &__sub {
+    font-size: 0.83rem;
+    color: $tb-text-muted;
+    margin: 0;
+    max-width: 240px;
+    line-height: 1.5;
+  }
+}
+
+// ── Modals ────────────────────────────────────────────────────────────────
+.tb-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.5);
+  backdrop-filter: blur(6px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.tb-modal {
+  background: $tb-surface;
+  border-radius: $tb-radius;
+  box-shadow: 0 24px 80px rgba(15,23,42,0.22), 0 0 0 1px rgba(15,23,42,0.06);
+  width: 100%;
+  max-width: 420px;
+  overflow: hidden;
+  animation: tb-modal-in 0.24s cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 22px 24px 18px;
+
+    &-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    &-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      background: $tb-bg;
+      border: 1px solid $tb-border;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: $tb-text-muted;
+      flex-shrink: 0;
+
+      &--accent {
+        background: $tb-accent-light;
+        border-color: rgba($tb-accent, 0.2);
+        color: $tb-accent;
+      }
+    }
+  }
+
+  &__title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: $tb-text;
+    margin: 0;
+    line-height: 1.2;
+  }
+
+  &__subtitle {
+    font-size: 0.75rem;
+    color: $tb-text-muted;
+    margin: 2px 0 0;
+  }
+
+  &__close {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    border: none;
+    background: transparent;
+    color: $tb-text-muted;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s;
+    &:hover { background: $tb-bg; }
+  }
+
+  &__body {
+    padding: 22px 24px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  &__field { display: flex; flex-direction: column; gap: 7px; }
+
+  &__label {
+    font-size: 0.78rem;
+    font-weight: 500;
+    color: $tb-text-muted;
+  }
+
+  &__input {
+    font-family: $tb-font;
+    font-size: 0.9rem;
+    color: $tb-text;
+    border: 1.5px solid $tb-border;
+    border-radius: $tb-radius-sm;
+    padding: 11px 14px;
+    outline: none;
+    width: 100%;
+    background: $tb-bg;
+    transition: border-color 0.18s, box-shadow 0.18s, background 0.18s;
+    box-sizing: border-box;
+
+    &:focus {
+      border-color: $tb-accent;
+      box-shadow: 0 0 0 3px rgba($tb-accent, 0.12);
+      background: #fff;
+    }
+  }
+
+  &__actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+  }
+
+  &__btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 0 18px;
+    height: 40px;
+    border-radius: $tb-radius-sm;
+    font-family: $tb-font;
+    font-size: 0.84rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: 1.5px solid transparent;
+    transition: all 0.15s;
+
+    &:active { transform: scale(0.97); }
+    &:disabled { opacity: 0.45; cursor: not-allowed; }
+
+    &--cancel {
+      background: $tb-surface;
+      color: $tb-text-muted;
+      border-color: $tb-border;
+      &:hover:not(:disabled) { background: $tb-bg; }
+    }
+
+    &--add {
+      background: $tb-accent;
+      color: #fff;
+      border-color: $tb-accent;
+      box-shadow: 0 2px 8px rgba($tb-accent, 0.25);
+      &:hover:not(:disabled) {
+        background: $tb-accent-dark;
+        border-color: $tb-accent-dark;
+        box-shadow: 0 4px 14px rgba($tb-accent, 0.38);
+      }
+    }
+  }
+}
+
+@keyframes tb-modal-in {
+  from { opacity: 0; transform: scale(0.9) translateY(14px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+// ── QR Modal ──────────────────────────────────────────────────────────────
+.tb-qr-modal {
+  max-width: 410px;
+
+  &__body {
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+  }
+
+  &__canvas {
+    padding: 18px;
+    background: #fff;
+    border-radius: $tb-radius-md;
+    border: 1.5px solid $tb-border;
+    box-shadow: 0 4px 16px rgba(15,23,42,0.07);
+  }
+
+  &__url {
+    font-size: 0.7rem;
+    color: $tb-text-muted;
+    margin: 0;
+    word-break: break-all;
+    text-align: center;
+    line-height: 1.6;
+    background: $tb-bg;
+    border-radius: $tb-radius-sm;
+    padding: 8px 12px;
+    // border: 1px solid $tb-border;
+    width: 100%;
+    box-sizing: border-box;
+  }
+}
+
+// ── Table Booking Screen (customer-facing) ────────────────────────────────
+.tbs-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 16px;
+  font-family: $tb-font;
+  background: #f1f5f9;
+}
+
+.tbs-card {
+  background: #fff;
+  border-radius: 28px;
+  padding: 36px 28px 32px;
+  max-width: 390px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 32px 80px rgba(15, 23, 42, 0.13), 0 2px 8px rgba(15, 23, 42, 0.06);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  position: relative;
+  overflow: hidden;
+  animation: tb-modal-in 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  &--unavailable { border-top: 4px solid $tb-red; }
+}
+
+// ── Glow accent behind available card ──
+.tbs-card__glow {
+  position: absolute;
+  top: -60px; left: 50%;
+  transform: translateX(-50%);
+  width: 260px; height: 160px;
+  background: radial-gradient(ellipse, rgba(20, 161, 72, 0.18) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+// ── Status badge ──
+.tbs-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 14px;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  z-index: 1;
+
+  &--available {
+    background: #dcfce7;
+    color: #15803d;
+  }
+  &--booked {
+    background: #fff7ed;
+    color: #c2410c;
+  }
+}
+
+.tbs-status-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: #16a34a;
+  box-shadow: 0 0 0 2px rgba(22, 163, 74, 0.3);
+  animation: tbs-pulse 1.8s ease-in-out infinite;
+}
+
+@keyframes tbs-pulse {
+  0%, 100% { box-shadow: 0 0 0 2px rgba(22, 163, 74, 0.3); }
+  50%       { box-shadow: 0 0 0 5px rgba(22, 163, 74, 0.0); }
+}
+
+.tbs-icon {
+  width: 76px; height: 76px;
+  border-radius: 24px;
+  display: flex; align-items: center; justify-content: center;
+  z-index: 1;
+  margin: 10px 0px;
+
+  &--green {
+    background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
+    color: $tb-green;
+    box-shadow: 0 8px 24px rgba(22, 163, 74, 0.2);
+  }
+  &--amber { background: $tb-amber-light; color: $tb-amber; }
+  &--red   { background: $tb-red-light;   color: $tb-red; }
+}
+
+.tbs-restaurant-name {
+  font-size: 0.75rem; font-weight: 600; color: $tb-text-muted;
+  text-transform: uppercase; letter-spacing: 0.08em; margin: 0;
+}
+
+.tbs-title {
+  font-size: 1.9rem; font-weight: 800; color: $tb-text;
+  margin: 0; letter-spacing: -0.04em; line-height: 1.15;
+}
+
+.tbs-sub {
+  font-size: 0.8rem; color: $tb-text-muted; margin: .8rem 0rem;
+  line-height: 1.6; max-width: 290px;
+}
+
+.tbs-restaurant { font-size: 0.82rem; color: $tb-text-muted; margin: 0; font-style: italic; }
+
+// ── Info chips ──
+.tbs-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  margin: 4px 0;
+}
+
+.tbs-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  font-size: 0.68rem;
+  font-weight: 600;
+  background: #f1f5f9;
+  color: #475569;
+  border: 1px solid #e2e8f0;
+
+  &--green {
+    background: #dcfce7;
+    color: #15803d;
+    border-color: #bbf7d0;
+  }
+}
+
+.tbs-confirm-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  width: 100%;
+  height: 56px;
+  border-radius: 50px;
+  background: linear-gradient(135deg, #22c55e 0%, #16a34a 50%, #15803d 100%);
+  color: #fff;
+  border: none;
+  font-family: $tb-font;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  margin-top: 8px;
+  overflow: hidden;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.25) inset;
+  transition: transform 0.14s, box-shadow 0.18s, filter 0.18s;
+
+  // shimmer layer
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      105deg,
+      transparent 40%,
+      rgba(255, 255, 255, 0.18) 50%,
+      transparent 60%
+    );
+    background-size: 200% 100%;
+    background-position: -100% 0;
+    transition: background-position 0.5s ease;
+  }
+
+  &:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.25) inset;
+
+    &::after {
+      background-position: 200% 0;
+    }
+  }
+
+  &:active:not(:disabled) {
+    transform: scale(0.975);
+  }
+
+  &:disabled { opacity: 0.6; cursor: not-allowed; }
+  &--loading { filter: brightness(1.04); }
+}
+
+.tbs-btn-spinner {
+  width: 20px; height: 20px;
+  border: 2.5px solid rgba(255,255,255,0.4);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: auth-spin 0.65s linear infinite;
+}
+
+.tbs-hint { font-size: 0.73rem; color: $tb-text-muted; margin: 0; line-height: 1.5; }
+
+.tbs-spinner {
+  width: 40px; height: 40px;
+  border: 3px solid rgba(99,102,241,0.15);
+  border-top-color: $tb-accent;
+  border-radius: 50%;
+  animation: auth-spin 0.65s linear infinite;
+}
+
+// ── Menu table chip (inside menu view) ────────────────────────────────────
+.menu-table-banner {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+  border-radius: 0;
+  padding: 14px 18px;
+  margin: 0;
+  width: 100%;
+  box-shadow: 0 8px 24px rgba(79, 70, 229, 0.28);
+  font-family: $tb-font;
+
+  &__icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    flex-shrink: 0;
+  }
+
+  &__info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    flex: 1;
+  }
+
+  &__label {
+    font-size: 0.68rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: rgba(255, 255, 255, 0.65);
+  }
+
+  &__name {
+    font-size: 1.05rem;
+    font-weight: 800;
+    color: #fff;
+    letter-spacing: -0.02em;
+  }
+
+  &__status {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 99px;
+    padding: 5px 11px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: #fff;
+    flex-shrink: 0;
+  }
+
+  &__dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #4ade80;
+    box-shadow: 0 0 0 2px rgba(74, 222, 128, 0.35);
+    animation: tbs-pulse 1.8s ease-in-out infinite;
+  }
+}
