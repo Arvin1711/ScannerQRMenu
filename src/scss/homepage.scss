@@ -125,6 +125,34 @@ $hp-background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
     }
   }
 
+  .auth-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 0px;
+
+    &__icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #6366f1, #4f46e5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      box-shadow: 0 4px 14px #6366f159;
+    }
+
+    &-title {
+      font-size: 22px;
+      font-weight: 800;
+      color: #0f172a;
+      letter-spacing: -.03em;
+      margin: 0 0 4px;
+    }
+  }
+
+
   &__nav-links {
     display: flex;
     gap: 28px;
