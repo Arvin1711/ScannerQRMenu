@@ -522,7 +522,7 @@ export default function HomePage({ onSignIn, onGetStarted }) {
           {/* aria-label distinguishes this nav from the main navigation */}
           <nav aria-label="Footer navigation">
             {["Home", "Services", "Blog", "Help Center", "Contact"].map((l) => (
-              <a key={l} href="#">
+              <a key={l} href="#">  
                 {l}
               </a>
             ))}
