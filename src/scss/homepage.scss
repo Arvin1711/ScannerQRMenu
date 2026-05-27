@@ -28,8 +28,6 @@ $hp-background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
     box-sizing: border-box;
   }
 
-  // ── Screen-reader-only utility ──
-  // Visually hidden but readable by assistive technology.
   .sr-only {
     position: absolute;
     width: 1px;
@@ -42,8 +40,6 @@ $hp-background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
     border-width: 0;
   }
 
-  // ── Default focus-visible ring for all interactive elements ──
-  // Overridden per-element where a different colour reads better.
   button:focus-visible,
   a:focus-visible {
     outline: 2px solid $hp-purple-dark;
@@ -82,8 +78,6 @@ $hp-background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
     }
   }
 
-  // ── Skip-to-content link ──
-  // Off-screen by default; revealed on :focus for keyboard users.
   &__skip-link {
     position: absolute;
     left: -9999px;
@@ -266,7 +260,6 @@ $hp-background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
     font-size: 12px;
     font-weight: 600;
     cursor: pointer;
-    // Button resets (element changed from <span> to <button>)
     border: none;
     font-family: inherit;
 

@@ -744,7 +744,7 @@ function Topbar({
           )}
         </div>
 
-        {/* ── Profile ── */}
+        {/* ── PROFILE ── */}
         <div className="ta-profile-wrap">
           <button
             className={`ta-topbar__user ${profileOpen ? "active" : ""}`}

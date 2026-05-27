@@ -485,7 +485,7 @@ export default function HomePage({ onSignIn, onGetStarted }) {
               </label>
               <input
                 id="footer-email"
-                type="email"
+                type="email"  
                 placeholder="Enter your email address..."
                 aria-labelledby="subscribe-label"
               />
