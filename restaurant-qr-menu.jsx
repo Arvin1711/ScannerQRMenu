@@ -14,6 +14,7 @@ import OrderPage from "./order.jsx";
 import HomePage from "./src/landingpage/HomePage.jsx";
 
 import { IcoGrid, IcoList, IcoWhatsApp, IcoGoogle } from "./src/icons.jsx";
+import { Home, ClipboardList } from "lucide-react";
 const GridIcon = () => <IcoGrid />;
 const ListIcon = () => <IcoList />;
 const WaIcon   = () => <IcoWhatsApp size={18} />;
@@ -451,6 +452,107 @@ function GoogleReviewPrompt({ url, onClose }) {
   );
 }
 
+// ── Hero Carousel ──
+const CAROUSEL_OFFER_STYLES = [
+  { badge: "Today's Special", accent: "#f97316" },
+  { badge: "Chef's Pick",     accent: "#8b5cf6" },
+  { badge: "Fan Favourite",   accent: "#e11d48" },
+  { badge: "Must Try",        accent: "#059669" },
+  { badge: "Fresh Today",     accent: "#0284c7" },
+];
+
+function MenuHeroCarousel({ data }) {
+  const trackRef = useRef(null);
+
+  const slides = useMemo(() => {
+    const featured = data.items.filter(
+      (i) => i.available && i.image && (i.tag === "popular" || i.tag === "chef" || i.tag === "new")
+    );
+    const pool = featured.length >= 2 ? featured : data.items.filter((i) => i.available && i.image);
+    return pool.slice(0, 5);
+  }, [data.items]);
+
+  const [active, setActive] = useState(0);
+
+  const scrollTo = (idx) => {
+    const track = trackRef.current;
+    if (!track) return;
+    const slide = track.querySelector(".menu-carousel__slide");
+    if (!slide) return;
+    const gap = 12;
+    track.scrollTo({ left: idx * (slide.offsetWidth + gap), behavior: "smooth" });
+  };
+
+  const goTo = (idx) => {
+    setActive(idx);
+    scrollTo(idx);
+  };
+
+  useEffect(() => {
+    if (slides.length <= 1) return;
+    const t = setInterval(() => {
+      setActive((p) => {
+        const next = (p + 1) % slides.length;
+        scrollTo(next);
+        return next;
+      });
+    }, 4000);
+    return () => clearInterval(t);
+  }, [slides.length]);
+
+  // sync dot on native swipe scroll
+  useEffect(() => {
+    const track = trackRef.current;
+    if (!track) return;
+    const onScroll = () => {
+      const slide = track.querySelector(".menu-carousel__slide");
+      if (!slide) return;
+      const gap = 12;
+      const idx = Math.round(track.scrollLeft / (slide.offsetWidth + gap));
+      setActive(idx);
+    };
+    track.addEventListener("scroll", onScroll, { passive: true });
+    return () => track.removeEventListener("scroll", onScroll);
+  }, [slides.length]);
+
+  if (!slides.length) return null;
+
+  return (
+    <div className="menu-carousel-wrap">
+      <div className="menu-carousel" ref={trackRef}>
+        {slides.map((item, i) => {
+          const style = CAROUSEL_OFFER_STYLES[i % CAROUSEL_OFFER_STYLES.length];
+          return (
+            <div key={item.id} className="menu-carousel__slide">
+              <img src={item.image} alt={item.name} className="menu-carousel__img" />
+              <div className="menu-carousel__overlay">
+                <span className="menu-carousel__badge" style={{ background: style.accent }}>
+                  {style.badge}
+                </span>
+                <h3 className="menu-carousel__name">{item.name}</h3>
+                {item.desc && <p className="menu-carousel__desc">{item.desc}</p>}
+                <p className="menu-carousel__price">₹{item.price.toFixed(0)}</p>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {slides.length > 1 && (
+        <div className="menu-carousel__dots">
+          {slides.map((_, i) => (
+            <button
+              key={i}
+              className={`menu-carousel__dot${i === active ? " active" : ""}`}
+              onClick={() => goTo(i)}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 // ── Customer Menu View ──
 function MenuView({
   data,
@@ -515,94 +617,39 @@ function MenuView({
 
   return (
     <div className="menu-view">
-      {tableLabel && (
-        <div className="menu-table-banner">
-          <div className="menu-table-banner__icon">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-              <rect x="3" y="6" width="18" height="3" rx="1"/><line x1="7" y1="9" x2="7" y2="18"/><line x1="17" y1="9" x2="17" y2="18"/><line x1="5" y1="18" x2="9" y2="18"/><line x1="15" y1="18" x2="19" y2="18"/>
-            </svg>
-          </div>
-          <div className="menu-table-banner__info">
-            <span className="menu-table-banner__label">Your Table</span>
-            <span className="menu-table-banner__name">{tableLabel}</span>
-          </div>
-          <div className="menu-table-banner__status">
-            <span className="menu-table-banner__dot" />
-            Seated
-          </div>
-        </div>
-      )}
-      <div className="menu-header">
-        {lastOrder && (
-          <button
-            className="my-order-btn"
-            onClick={() => setShowOrderSummary(true)}
-            title="View my order"
-          >
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.3" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
-              <polyline points="14 2 14 8 20 8"/>
-              <line x1="16" y1="13" x2="8" y2="13"/>
-              <line x1="16" y1="17" x2="8" y2="17"/>
-            </svg>
-            My Order
+      {/* ── Sticky Nav Header ── */}
+      <div className="menu-nav-header">
+        {onBackToWelcome ? (
+          <button className="menu-nav-home" onClick={onBackToWelcome}>
+            <Home size={16} />
+            <span>Home</span>
           </button>
-        )}
-        {onBackToWelcome && (
-          <button
-            className="menu-header-back"
-            onClick={onBackToWelcome}
-            title="Back to home"
-          >
-            <svg
-              width="18"
-              height="18"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <polyline points="15 18 9 12 15 6" />
-            </svg>
-          </button>
-        )}
-        <div className="menu-header-left">
-          <p className="menu-header-script">Welcome to</p>
-          <h1 className="menu-header-title">
-            {data.name.split(" ").length > 1 ? (
-              <>
-                {data.name.split(" ").slice(0, -1).join(" ")}{" "}
-                <span className="title-accent">
-                  {data.name.split(" ").at(-1)}
-                </span>
-              </>
-            ) : (
-              <span className="title-accent">{data.name}</span>
-            )}
-          </h1>
-          <div className="menu-header-divider" />
-          <p className="menu-header-tagline">{data.tagline}</p>
-          <div className="menu-header-badges">
-            <span className="badge-primary">Seasonal favorites</span>
-            <span className="badge-secondary">Fresh daily</span>
+        ) : (
+          <div className="menu-nav-home menu-nav-home--ghost" aria-hidden>
+            <Home size={16} /><span>Home</span>
           </div>
-        </div>
-        <div className="menu-header-right">
-          <div className="menu-header-blob-top" />
-          <div className="menu-header-blob-bottom" />
-          <div className="menu-header-circle">
-            <img
-              src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=400&q=80"
-              alt="Featured dish"
-              onError={(e) => {
-                e.currentTarget.src = "https://picsum.photos/seed/food/400/400";
-              }}
-            />
-          </div>
+        )}
+
+        <div className="menu-nav-right-group">
+          <p className="menu-nav-brand">{data.name}</p>
+          {tableLabel ? (
+            <div className="menu-nav-chip menu-nav-chip--table">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="3" y="6" width="18" height="3" rx="1"/><line x1="7" y1="9" x2="7" y2="18"/><line x1="17" y1="9" x2="17" y2="18"/><line x1="5" y1="18" x2="9" y2="18"/><line x1="15" y1="18" x2="19" y2="18"/>
+              </svg>
+              {tableLabel}
+            </div>
+          ) : lastOrder ? (
+            <button className="menu-nav-chip menu-nav-chip--order" onClick={() => setShowOrderSummary(true)}>
+              <ClipboardList size={12} />
+              My Order
+            </button>
+          ) : null}
         </div>
       </div>
+
+      {/* ── Hero Carousel ── */}
+      <MenuHeroCarousel data={data} />
 
       <div className="menu-controls">
         <div className="category-chips">
@@ -1275,7 +1322,7 @@ export default function App() {
     setView("menu");
   };
 
-  const logOrder = async (entries, total, orderNum) => {
+  const logOrder = async (entries, total, orderNum, mobile) => {
     setLastOrder({ entries, total, orderNum });
     if (!isFirebaseConfigured || !ordersCol) return;
     try {
@@ -1292,6 +1339,7 @@ export default function App() {
         total,
         status: "pending",
         timestamp: serverTimestamp(),
+        ...(mobile ? { mobile } : {}),
         ...(bookedTable ? { tableId: bookedTable.id, tableLabel: bookedTable.label } : {}),
       };
       if (activeOrderDocId) {

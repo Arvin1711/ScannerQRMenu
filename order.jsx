@@ -32,6 +32,19 @@ export default function OrderPage({
   const [orderNum]                = useState(() => initialOrderNum || Math.floor(1000 + Math.random() * 9000));
   const [lastEntries, setLastEntries] = useState([]);
   const [lastTotal, setLastTotal] = useState(0);
+  const [mobile, setMobile]       = useState("");
+  const [mobileTouched, setMobileTouched] = useState(false);
+
+  const getMobileError = (val) => {
+    if (!val) return "Mobile number is required";
+    if (val.length < 10) return `Enter remaining ${10 - val.length} digit${10 - val.length !== 1 ? "s" : ""}`;
+    if (!/^[6-9]/.test(val)) return "Must start with 6, 7, 8, or 9";
+    if (/^(\d)\1{9}$/.test(val)) return "Enter a valid mobile number";
+    return null;
+  };
+
+  const mobileError  = getMobileError(mobile);
+  const mobileValid  = !mobileError;
 
   const entries    = Object.values(cart);
   const total      = entries.reduce((s, { item, qty }) => s + item.price * qty, 0);
@@ -62,7 +75,7 @@ export default function OrderPage({
     setPlacing(true);
     setLastEntries(entries);
     setLastTotal(total);
-    await onOrderPlaced?.(entries, total, orderNum);
+    await onOrderPlaced?.(entries, total, orderNum, mobile);
     setPlaced(true); // replaces the whole view (modal included)
   };
 
@@ -249,11 +262,47 @@ export default function OrderPage({
                     <span>₹{total.toFixed(0)}</span>
                   </div>
                 </div>
+                <div className="op-modal__mobile">
+                  <label className="op-modal__mobile-label">
+                    Mobile Number <span className="op-modal__mobile-req">*</span>
+                  </label>
+                  <div className={`op-modal__mobile-row${mobileTouched && mobileError ? " op-modal__mobile-row--error" : mobileValid ? " op-modal__mobile-row--valid" : ""}`}>
+                    <span className="op-modal__mobile-prefix">+91</span>
+                    <input
+                      className="op-modal__mobile-input"
+                      type="tel"
+                      inputMode="numeric"
+                      maxLength={10}
+                      placeholder="10-digit number"
+                      value={mobile}
+                      onChange={(e) => setMobile(e.target.value.replace(/\D/g, "").slice(0, 10))}
+                      onBlur={() => setMobileTouched(true)}
+                    />
+                    {mobileValid ? (
+                      <svg className="op-modal__mobile-ok" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#16a34a" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                        <polyline points="20 6 9 17 4 12"/>
+                      </svg>
+                    ) : mobileTouched && mobileError ? (
+                      <svg className="op-modal__mobile-err-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#dc2626" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                        <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+                      </svg>
+                    ) : null}
+                  </div>
+                  {mobileTouched && mobileError && (
+                    <p className="op-modal__mobile-hint op-modal__mobile-hint--error">{mobileError}</p>
+                  )}
+                  {!mobileTouched && !mobile && (
+                    <p className="op-modal__mobile-hint">Required to confirm your order</p>
+                  )}
+                  {mobileValid && (
+                    <p className="op-modal__mobile-hint op-modal__mobile-hint--ok">Looks good!</p>
+                  )}
+                </div>
                 <div className="op-modal__actions">
                   <button className="op-modal__cancel" onClick={() => setConfirming(false)} disabled={placing}>Cancel</button>
-                  <button className="op-modal__confirm" onClick={handlePlaceOrder} disabled={placing}>
+                  <button className="op-modal__confirm" onClick={handlePlaceOrder} disabled={placing || !mobileValid}>
                     {placing ? (
-                      <><span className="op-place-btn__spinner" /> Placing…</>
+                      <><span className="op-place-btn__spinner" />Placing…</>
                     ) : "Confirm Order"}
                   </button>
                 </div>

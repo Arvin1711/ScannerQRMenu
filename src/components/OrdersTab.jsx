@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { updateDoc, doc } from "firebase/firestore";
 import { QRCodeSVG, QRCodeCanvas } from "qrcode.react";
 import { db, isFirebaseConfigured } from "../firebase.js";
@@ -278,10 +278,24 @@ export default function OrdersTab({
   onDeleteOrder,
   restaurantName,
   upiId,
+  highlightOrderId,
+  onHighlightClear,
 }) {
   const [filter, setFilter] = useState("all");
   const [search, setSearch] = useState("");
   const [invoiceOrder, setInvoiceOrder] = useState(null);
+
+  useEffect(() => {
+    if (!highlightOrderId) return;
+    setFilter("all");
+    setSearch("");
+    const scrollTimer = setTimeout(() => {
+      const el = document.querySelector(`[data-order-id="${highlightOrderId}"]`);
+      el?.scrollIntoView({ behavior: "smooth", block: "center" });
+    }, 80);
+    const clearTimer = setTimeout(() => onHighlightClear?.(), 3000);
+    return () => { clearTimeout(scrollTimer); clearTimeout(clearTimer); };
+  }, [highlightOrderId]);
 
   const counts = {
     all: orders.length,
@@ -305,7 +319,8 @@ export default function OrdersTab({
       const q = search.trim().toLowerCase().replace(/^#/, "");
       return (
         o.id?.slice(-6).toLowerCase().includes(q) ||
-        (o.tableLabel || "").toLowerCase().includes(q)
+        (o.tableLabel || "").toLowerCase().includes(q) ||
+        (o.mobile || "").includes(q)
       );
     }
     return true;
@@ -433,7 +448,8 @@ export default function OrdersTab({
             return (
               <article
                 key={order.id}
-                className={`ord-card ord-card--${displayStatus} ${order.tableLabel ? "ord-card--table" : ""} ${isPaid ? "ord-card--paid" : ""}`}
+                data-order-id={order.id}
+                className={`ord-card ord-card--${displayStatus} ${order.tableLabel ? "ord-card--table" : ""} ${isPaid ? "ord-card--paid" : ""} ${highlightOrderId === order.id ? "ord-card--highlight" : ""}`}
                 onClick={() => onSelectOrder(order)}
               >
                 {/* Card header */}
@@ -526,7 +542,7 @@ export default function OrdersTab({
                   </div>
                 )}
 
-                {/* Source chip */}
+                {/* Source chip + mobile */}
                 <div className="ord-card__source">
                   {order.tableLabel ? (
                     <span className="ord-card__source-chip ord-card__source-chip--table">
@@ -548,6 +564,15 @@ export default function OrdersTab({
                         <rect x="17" y="17" width="4" height="4" rx="0.5" />
                       </svg>
                       Menu QR
+                    </span>
+                  )}
+                  {order.mobile && (
+                    <span className="ord-card__source-chip ord-card__source-chip--mobile">
+                      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                        <rect x="5" y="2" width="14" height="20" rx="2" ry="2"/>
+                        <line x1="12" y1="18" x2="12.01" y2="18"/>
+                      </svg>
+                      +91 {order.mobile}
                     </span>
                   )}
                 </div>

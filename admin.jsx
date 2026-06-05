@@ -44,10 +44,9 @@ import { LogOut, User } from "lucide-react";
 export const STORAGE_KEY = "qr-restaurant-menu-v2";
 
 const MENU_URL =
+  (typeof window !== "undefined" ? window.location.origin : null) ||
   import.meta.env.VITE_MENU_URL ||
-  (typeof window !== "undefined"
-    ? window.location.origin
-    : "https://menu.yourdomain.com");
+  "https://menu.yourdomain.com";
 
 export const DEFAULT_DATA = {
   name: "La Bella Cucina",
@@ -181,6 +180,7 @@ export function normalizeData(raw) {
   return {
     whatsapp: "",
     googleReview: "",
+    categories: [],
     ...raw,
     items: (raw.items || []).map((item) => ({
       veg: null,
@@ -807,6 +807,7 @@ export default function AdminPanel({ onPreview, onLogout }) {
   const [unreadIds, setUnreadIds] = useState(new Set());
   const [toast, setToast] = useState(null);
   const [selectedOrder, setSelectedOrder] = useState(null);
+  const [highlightOrderId, setHighlightOrderId] = useState(null);
   const prevOrderIds = useRef(new Set());
   const lastSeenAt = useRef(
     new Date(parseInt(localStorage.getItem("admin-notif-seen-at") || "0")),
@@ -1025,7 +1026,7 @@ export default function AdminPanel({ onPreview, onLogout }) {
             notifOpen={notifOpen}
             onToggleNotif={handleToggleNotif}
             onMarkAllRead={handleMarkAllRead}
-            onOrderClick={setSelectedOrder}
+            onOrderClick={(order) => { setTab("orders"); setHighlightOrderId(order.id); }}
             onToggleSidebar={() => setSidebarOpen((o) => !o)}
             onEditInfo={() => {
               setRestForm({
@@ -1070,6 +1071,8 @@ export default function AdminPanel({ onPreview, onLogout }) {
                 onDeleteOrder={deleteOrder}
                 restaurantName={data.name}
                 upiId={data.upiId}
+                highlightOrderId={highlightOrderId}
+                onHighlightClear={() => setHighlightOrderId(null)}
               />
             )}
 

@@ -16,7 +16,7 @@ export default defineConfig({
         name: "Restaurant QR Menu",
         short_name: "QR Menu",
         description: "Scan, browse and order from our menu",
-        theme_color: "#f97316",
+        theme_color: "#000000",
         background_color: "#ffffff",
         display: "standalone",
         orientation: "portrait",

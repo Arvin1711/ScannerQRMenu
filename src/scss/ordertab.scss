@@ -232,6 +232,18 @@ $font-sans: Inter, ui-sans-serif, system-ui, sans-serif;
   border-left: 3px solid #f59e0b !important;
 }
 
+.ord-card--highlight {
+  outline: 3px solid #6366f1 !important;
+  outline-offset: 2px;
+  animation: ord-card-highlight-pulse 3s ease forwards;
+}
+
+@keyframes ord-card-highlight-pulse {
+  0%   { outline-color: #6366f1; box-shadow: 0 0 0 6px rgba(99,102,241,0.3), 0 0 20px rgba(99,102,241,0.15); }
+  50%  { outline-color: #6366f1; box-shadow: 0 0 0 6px rgba(99,102,241,0.2), 0 0 20px rgba(99,102,241,0.1); }
+  100% { outline-color: transparent; box-shadow: none; }
+}
+
 // Paid card — full green highlight
 .ord-card--paid {
   border: 1.5px solid #86efac !important;
@@ -365,15 +377,16 @@ $font-sans: Inter, ui-sans-serif, system-ui, sans-serif;
 
 // Payment banner — full-width green strip shown when paid
 .ord-card__pay-banner {
-  display: flex;
-  align-items: center;
   gap: 6px;
-  padding: 6px 12px;
-  background: linear-gradient(90deg, #16a34a 0%, #15803d 100%);
+  display: flex;
   color: #fff;
   font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.03em;
+  font-weight: 500;
+  margin: 0px 10px;
+  padding: 6px 12px;
+  align-items: center;
+  border-radius: 20px;
+  background: linear-gradient(90deg, #16a34a 0%, #15803d 100%);
 
   svg {
     flex-shrink: 0;
@@ -416,7 +429,9 @@ $font-sans: Inter, ui-sans-serif, system-ui, sans-serif;
 
 // Source chip (table / QR)
 .ord-card__source {
+  display: flex;
   padding: 8px 12px 8px;
+  justify-content: space-between;
 }
 
 .ord-card__source-chip {
@@ -439,6 +454,13 @@ $font-sans: Inter, ui-sans-serif, system-ui, sans-serif;
     background: #f1f5f9;
     color: #64748b;
     border: 1px solid #e2e8f0;
+  }
+
+  &--mobile {
+    background: #eff6ff;
+    color: #1d4ed8;
+    border: 1px solid #bfdbfe;
+    font-variant-numeric: tabular-nums;
   }
 }
 
