@@ -245,6 +245,26 @@ body {
   color: #fff;
   margin: 0;
   letter-spacing: -0.02em;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.menu-carousel__price-original {
+  font-size: 12px;
+  font-weight: 500;
+  text-decoration: line-through;
+  opacity: 0.65;
+}
+
+.menu-carousel__discount-badge {
+  font-size: 10px;
+  font-weight: 700;
+  background: rgba(255, 255, 255, 0.25);
+  border-radius: 4px;
+  padding: 1px 5px;
+  letter-spacing: 0.02em;
 }
 
 .menu-carousel__dots {
@@ -832,6 +852,35 @@ body {
   font-weight: 800;
   color: $color-text-primary;
   letter-spacing: -0.02em;
+
+  &--offer {
+    color: #16a34a;
+  }
+}
+
+.menu-item-price-wrap {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex-wrap: wrap;
+}
+
+.menu-item-price-original {
+  font-size: 12px;
+  font-weight: 500;
+  color: #ef4444;
+  text-decoration: line-through;
+}
+
+.menu-item-discount-badge {
+  font-size: 9px;
+  font-weight: 700;
+  color: #15803d;
+  background: #dcfce7;
+  border-radius: 4px;
+  padding: 1px 5px;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
 }
 
 .menu-item-status {
@@ -1142,6 +1191,10 @@ body {
   }
 
   &.half {
+    flex: 1;
+  }
+
+  &.third {
     flex: 1;
   }
 }
@@ -3249,6 +3302,21 @@ body {
   font-weight: 800;
   color: $color-text-primary;
   letter-spacing: -0.03em;
+  margin: 0;
+}
+
+.item-detail-price-offer-wrap {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.item-detail-price-original {
+  font-size: 16px;
+  font-weight: 500;
+  color: #94a3b8;
+  text-decoration: line-through;
   margin: 0;
 }
 

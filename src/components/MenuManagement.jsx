@@ -1,4 +1,5 @@
 import { useState, useMemo, useRef } from "react";
+import { Upload, ImageIcon, AlertCircle, List, LayoutGrid } from "lucide-react";
 import { Button } from "./ui";
 
 function genId() {
@@ -19,8 +20,10 @@ function ItemModal({ item, categories, onSave, onClose }) {
       tag: null,
       spice: 0,
       image: "",
+      discountPct: "",
     }
   );
+  const [discountEnabled, setDiscountEnabled] = useState(!!(item?.discountPct > 0));
   const [imgMode, setImgMode] = useState("upload");
   const [uploadErr, setUploadErr] = useState("");
   const [dragging, setDragging] = useState(false);
@@ -93,10 +96,7 @@ function ItemModal({ item, categories, onSave, onClose }) {
                   <>
                     <img src={f.image} alt="Preview" className="img-upload-preview" />
                     <div className="img-upload-change">
-                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
-                        <polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
-                      </svg>
+                      <Upload size={20} />
                       <span>Change photo</span>
                     </div>
                     <button type="button" className="img-remove-btn" onClick={(e) => { e.stopPropagation(); set("image", ""); }}>×</button>
@@ -104,11 +104,7 @@ function ItemModal({ item, categories, onSave, onClose }) {
                 ) : (
                   <div className="img-upload-placeholder">
                     <div className="upload-img-icon">
-                      <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
-                        <rect x="4" y="4" width="56" height="56" rx="10" fill="#dbeafe"/>
-                        <circle cx="22" cy="22" r="7" fill="#3b82f6"/>
-                        <path d="M4 44 L20 28 L34 42 L44 32 L60 48 L60 60 L4 60 Z" fill="#60a5fa"/>
-                      </svg>
+                      <ImageIcon size={48} strokeWidth={1.2} />
                     </div>
                     <p className="upload-main-text">Drop your image here, or{" "}
                       <span className="upload-browse-link" onClick={(e) => { e.stopPropagation(); fileRef.current?.click(); }}>browse</span>
@@ -120,9 +116,7 @@ function ItemModal({ item, categories, onSave, onClose }) {
               </div>
               {uploadErr && (
                 <p className="img-upload-err">
-                  <svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor">
-                    <path d="M8 1a7 7 0 100 14A7 7 0 008 1zm0 3a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 018 4zm0 7a1 1 0 110-2 1 1 0 010 2z"/>
-                  </svg>
+                  <AlertCircle size={12} />
                   {uploadErr}
                 </p>
               )}
@@ -151,6 +145,52 @@ function ItemModal({ item, categories, onSave, onClose }) {
             </select>
           </div>
         </div>
+        <div className="form-checkbox">
+          <label>Discount Offer</label>
+          <button
+            type="button"
+            className={discountEnabled ? "checked" : "unchecked"}
+            onClick={() => {
+              const next = !discountEnabled;
+              setDiscountEnabled(next);
+              if (!next) set("discountPct", "");
+            }}
+          >
+            {discountEnabled ? "On" : "Off"}
+          </button>
+        </div>
+        {discountEnabled && (
+          <div className="form-row">
+            <div className="form-field half">
+              <label>Discount (%)</label>
+              <input
+                type="number"
+                value={f.discountPct}
+                onChange={(e) => {
+                  const v = e.target.value;
+                  if (v === "" || (parseFloat(v) >= 0 && parseFloat(v) <= 100)) set("discountPct", v);
+                }}
+                placeholder="0"
+                min="0"
+                max="100"
+                autoFocus
+              />
+            </div>
+            <div className="form-field half">
+              <label>Offer Price (₹)</label>
+              <input
+                type="text"
+                readOnly
+                className="offer-price-display"
+                value={
+                  f.discountPct !== "" && parseFloat(f.discountPct) > 0 && parseFloat(f.price) > 0
+                    ? (parseFloat(f.price) * (1 - parseFloat(f.discountPct) / 100)).toFixed(0)
+                    : "—"
+                }
+              />
+            </div>
+          </div>
+        )}
         <div className="form-row">
           <div className="form-field half">
             <label>Special tag</label>
@@ -205,6 +245,7 @@ export default function MenuManagement({ data, onPersist }) {
   const [filterCat, setFilterCat] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
   const [modal, setModal] = useState(null);
+  const [viewMode, setViewMode] = useState("grid");
 
   const filteredItems = useMemo(() => {
     let items =
@@ -220,10 +261,11 @@ export default function MenuManagement({ data, onPersist }) {
 
   const saveItem = (form) => {
     const price = parseFloat(form.price);
+    const discountPct = form.discountPct !== "" ? parseFloat(form.discountPct) : 0;
     const newItems =
       modal.type === "add"
-        ? [...data.items, { ...form, price, id: genId() }]
-        : data.items.map((i) => (i.id === form.id ? { ...form, price } : i));
+        ? [...data.items, { ...form, price, discountPct, id: genId() }]
+        : data.items.map((i) => (i.id === form.id ? { ...form, price, discountPct } : i));
     onPersist({ ...data, items: newItems });
     setModal(null);
   };
@@ -259,7 +301,7 @@ export default function MenuManagement({ data, onPersist }) {
           
         </header>
 
-        <div role="search" className="items-search-wrap">
+        <div className="items-search-wrap">
           <input
             className="items-search"
             value={searchQuery}
@@ -267,16 +309,43 @@ export default function MenuManagement({ data, onPersist }) {
             placeholder="Search items by name or description…"
             aria-label="Search menu items"
           />
+          <div className="view-toggle" role="group" aria-label="View mode">
+            <button
+              className={viewMode === "list" ? "active" : ""}
+              onClick={() => setViewMode("list")}
+              aria-pressed={viewMode === "list"}
+              title="List view"
+            >
+              <List size={15} />
+            </button>
+            <button
+              className={viewMode === "grid" ? "active" : ""}
+              onClick={() => setViewMode("grid")}
+              aria-pressed={viewMode === "grid"}
+              title="Grid view"
+            >
+              <LayoutGrid size={15} />
+            </button>
+          </div>
           <Button variant="primary" size="md" onClick={() => setModal({ type: "add" })}>+ Add item</Button>
         </div>
 
         {filteredItems.length === 0 ? (
           <p className="items-empty" role="status">No items found.</p>
         ) : (
-          <ul className="items-list" aria-label="Menu items">
+          <ul className={`items-list items-list--${viewMode}`} aria-label="Menu items">
             {filteredItems.map((item) => (
               <li key={item.id}>
                 <article className={`item-row ${item.available ? "" : "unavailable"}`}>
+                  <div className="item-thumb">
+                    {item.image ? (
+                      <img src={item.image} alt={item.name} />
+                    ) : (
+                      <span className="item-thumb-placeholder" aria-hidden="true">
+                        <ImageIcon size={22} strokeWidth={1.5} />
+                      </span>
+                    )}
+                  </div>
                   <div className="item-info">
                     <div className="item-name-row">
                       <span className="item-name">{item.name}</span>
@@ -285,7 +354,15 @@ export default function MenuManagement({ data, onPersist }) {
                     </div>
                     {item.desc && <p className="item-desc">{item.desc}</p>}
                   </div>
-                  <span className="item-price" aria-label={`Price: ₹${item.price.toFixed(0)}`}>₹{item.price.toFixed(0)}</span>
+                  {item.discountPct > 0 ? (
+                    <div className="item-price-wrap">
+                      <span className="item-price-original">₹{item.price.toFixed(0)}</span>
+                      <span className="item-price item-price--offer" aria-label={`Offer price: ₹${(item.price * (1 - item.discountPct / 100)).toFixed(0)}`}>₹{(item.price * (1 - item.discountPct / 100)).toFixed(0)}</span>
+                      <span className="item-tag discount-tag">{item.discountPct}% OFF</span>
+                    </div>
+                  ) : (
+                    <span className="item-price" aria-label={`Price: ₹${item.price.toFixed(0)}`}>₹{item.price.toFixed(0)}</span>
+                  )}
                   <div className="item-actions">
                     {item.veg != null && (
                       <span className={`item-diet-badge ${item.veg ? "veg" : "nonveg"}`} aria-label={item.veg ? "Veg" : "Non-veg"}>

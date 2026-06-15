@@ -1,91 +1,7 @@
 import { useState, useRef } from "react";
 import { QRCodeCanvas } from "qrcode.react";
-import { Table2 } from "lucide-react";
+import { Ban, Check, Download, Lock, LockOpen, Plus, QrCode, Search, Table2, Trash2, X } from "lucide-react";
 import { Button } from "./ui";
-
-// ── Icons ──────────────────────────────────────────────────────────────────
-function IcoPlus() {
-  return (
-    <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
-      stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
-      <line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" />
-    </svg>
-  );
-}
-
-function IcoTrash() {
-  return (
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
-      stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <polyline points="3 6 5 6 21 6" />
-      <path d="M19 6l-1 14H6L5 6" />
-      <path d="M10 11v6M14 11v6" />
-      <path d="M9 6V4h6v2" />
-    </svg>
-  );
-}
-
-function IcoQR() {
-  return (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
-      stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <rect x="3" y="3" width="7" height="7" rx="1" />
-      <rect x="14" y="3" width="7" height="7" rx="1" />
-      <rect x="3" y="14" width="7" height="7" rx="1" />
-      <rect x="14" y="14" width="3" height="3" />
-      <rect x="18" y="18" width="3" height="3" />
-    </svg>
-  );
-}
-
-function IcoDownload() {
-  return (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
-      stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />
-      <polyline points="7 10 12 15 17 10" />
-      <line x1="12" y1="15" x2="12" y2="3" />
-    </svg>
-  );
-}
-
-function IcoUnlock() {
-  return (
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
-      stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-      <rect x="3" y="11" width="18" height="11" rx="2" />
-      <path d="M7 11V7a5 5 0 019.9-1" />
-    </svg>
-  );
-}
-
-function IcoCheck() {
-  return (
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
-      stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-      <polyline points="20 6 9 17 4 12" />
-    </svg>
-  );
-}
-
-function IcoBan() {
-  return (
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
-      stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-      <circle cx="12" cy="12" r="10" />
-      <line x1="4.93" y1="4.93" x2="19.07" y2="19.07" />
-    </svg>
-  );
-}
-
-function IcoSearch() {
-  return (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
-      stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-      <circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" />
-    </svg>
-  );
-}
 
 // ── Derive table status ────────────────────────────────────────────────────
 function getStatus(table) {
@@ -128,7 +44,7 @@ function BulkToggle({ allEnabled, noneEnabled, onEnableAll, onDisableAll }) {
         disabled={allEnabled}
         title="Enable all tables"
       >
-        <IcoCheck />
+        <Check size={13} strokeWidth={2.5} />
         <span>Enable All</span>
       </button>
 
@@ -138,7 +54,7 @@ function BulkToggle({ allEnabled, noneEnabled, onEnableAll, onDisableAll }) {
         disabled={noneEnabled}
         title="Disable all tables"
       >
-        <IcoBan />
+        <Ban size={13} strokeWidth={2.2} />
         <span>Disable All</span>
       </button>
     </div>
@@ -164,16 +80,14 @@ function QRModal({ table, menuUrl, onClose }) {
       <div className="tb-modal tb-qr-modal">
         <div className="tb-modal__header">
           <div className="tb-modal__header-left">
-            <div className="tb-modal__header-icon"><IcoQR /></div>
+            <div className="tb-modal__header-icon"><QrCode size={14} strokeWidth={2} /></div>
             <div>
               <h3 className="tb-modal__title">{table.label}</h3>
               <p className="tb-modal__subtitle">Scan to book this table</p>
             </div>
           </div>
           <button className="tb-modal__close" onClick={onClose}>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
-              <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
-            </svg>
+            <X size={16} strokeWidth={2.2} />
           </button>
         </div>
         <div className="tb-qr-modal__body">
@@ -182,7 +96,7 @@ function QRModal({ table, menuUrl, onClose }) {
           </div>
           <p className="tb-qr-modal__url">{tableUrl}</p>
           <Button variant="primary" onClick={handleDownload}>
-            <IcoDownload /> Download PNG
+            <Download size={14} strokeWidth={2} /> Download PNG
           </Button>
         </div>
       </div>
@@ -242,14 +156,14 @@ function TableCard({ table, onToggle, onRemove, onRename, onRelease, onShowQR })
           </span>
         </div>
         <button className="tb-card__delete" onClick={() => onRemove(table.id)} title="Remove table">
-          <IcoTrash />
+          <Trash2 size={13} strokeWidth={2} />
         </button>
       </div>
 
       {/* Release banner (booked only) */}
       {status === "booked" && (
         <button className="tb-card__release" onClick={() => onRelease(table.id)}>
-          <IcoUnlock />
+          <LockOpen size={13} strokeWidth={2.2} />
           Release Table
         </button>
       )}
@@ -257,7 +171,7 @@ function TableCard({ table, onToggle, onRemove, onRename, onRelease, onShowQR })
       {/* Footer: QR + toggle */}
       <div className="tb-card__footer">
         <button className="tb-card__qr" onClick={() => onShowQR(table)}>
-          <IcoQR />
+          <QrCode size={14} strokeWidth={2} />
           QR Code
         </button>
         <Toggle
@@ -288,7 +202,7 @@ function AddTableModal({ nextNumber, onAdd, onClose }) {
         <div className="tb-modal__header">
           <div className="tb-modal__header-left">
             <div className="tb-modal__header-icon tb-modal__header-icon--accent">
-              <IcoPlus />
+              <Plus size={15} strokeWidth={2.5} />
             </div>
             <div>
               <h3 className="tb-modal__title">Add New Table</h3>
@@ -296,9 +210,7 @@ function AddTableModal({ nextNumber, onAdd, onClose }) {
             </div>
           </div>
           <button className="tb-modal__close" onClick={onClose}>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
-              <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
-            </svg>
+            <X size={16} strokeWidth={2.2} />
           </button>
         </div>
         <form onSubmit={handleSubmit} className="tb-modal__body">
@@ -315,7 +227,7 @@ function AddTableModal({ nextNumber, onAdd, onClose }) {
           <div className="tb-modal__actions">
             <button type="button" className="tb-modal__btn tb-modal__btn--cancel" onClick={onClose}>Cancel</button>
             <button type="submit" className="tb-modal__btn tb-modal__btn--add" disabled={!label.trim()}>
-              <IcoPlus /> Add Table
+              <Plus size={15} strokeWidth={2.5} /> Add Table
             </button>
           </div>
         </form>
@@ -352,7 +264,7 @@ export default function TablesBook({ tables = [], menuUrl = "", onToggle, onAdd,
           <p className="tb-header__sub">Manage your dining tables and their availability</p>
         </div>
         <Button variant="primary" onClick={() => setShowAddModal(true)}>
-          <IcoPlus /> Add Table
+          <Plus size={15} strokeWidth={2.5} /> Add Table
         </Button>
       </div>
 
@@ -360,27 +272,25 @@ export default function TablesBook({ tables = [], menuUrl = "", onToggle, onAdd,
       <div className="tb-stats">
         <div className="tb-stat tb-stat--total">
           <div className="tb-stat__icon">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <rect x="3" y="6" width="18" height="3" rx="1"/><line x1="7" y1="9" x2="7" y2="18"/><line x1="17" y1="9" x2="17" y2="18"/><line x1="5" y1="18" x2="9" y2="18"/><line x1="15" y1="18" x2="19" y2="18"/>
-            </svg>
+            <Table2 size={16} strokeWidth={2} />
           </div>
           <span className="tb-stat__val">
             <span className="tb-stat__label">Total</span>
             {tables.length}
           </span>
-          
         </div>
         <div className="tb-stat tb-stat--available">
           <div className="tb-stat__icon">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            <Check size={16} strokeWidth={2.2} />
           </div>
           <span className="tb-stat__val">
             <span className="tb-stat__label">Available</span>
-            {available}</span>
+            {available}
+          </span>
         </div>
         <div className="tb-stat tb-stat--booked">
           <div className="tb-stat__icon">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+            <Lock size={16} strokeWidth={2.2} />
           </div>
           <span className="tb-stat__val">
             <span className="tb-stat__label">Booked</span>
@@ -389,7 +299,7 @@ export default function TablesBook({ tables = [], menuUrl = "", onToggle, onAdd,
         </div>
         <div className="tb-stat tb-stat--disabled">
           <div className="tb-stat__icon">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
+            <Ban size={16} strokeWidth={2.2} />
           </div>
           <span className="tb-stat__val">
             <span className="tb-stat__label">Disabled</span>
@@ -401,7 +311,7 @@ export default function TablesBook({ tables = [], menuUrl = "", onToggle, onAdd,
       {/* ── Toolbar ── */}
       <div className="tb-toolbar">
         <div className="tb-search">
-          <IcoSearch />
+          <Search size={14} strokeWidth={2.2} />
           <input
             className="tb-search__input"
             placeholder="Search tables…"
@@ -410,9 +320,7 @@ export default function TablesBook({ tables = [], menuUrl = "", onToggle, onAdd,
           />
           {search && (
             <button className="tb-search__clear" onClick={() => setSearch("")}>
-              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
-                <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
-              </svg>
+              <X size={10} strokeWidth={2.5} />
             </button>
           )}
         </div>
@@ -428,14 +336,12 @@ export default function TablesBook({ tables = [], menuUrl = "", onToggle, onAdd,
       {tables.length === 0 ? (
         <div className="tb-empty">
           <div className="tb-empty__art">
-            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round">
-              <rect x="3" y="6" width="18" height="3" rx="1"/><line x1="7" y1="9" x2="7" y2="18"/><line x1="17" y1="9" x2="17" y2="18"/><line x1="5" y1="18" x2="9" y2="18"/><line x1="15" y1="18" x2="19" y2="18"/>
-            </svg>
+            <Table2 size={48} strokeWidth={1.4} />
           </div>
           <p className="tb-empty__title">No tables yet</p>
           <p className="tb-empty__sub">Add your first table and generate its QR code</p>
           <Button variant="primary" onClick={() => setShowAddModal(true)}>
-            <IcoPlus /> Add Your First Table
+            <Plus size={15} strokeWidth={2.5} /> Add Your First Table
           </Button>
         </div>
       ) : visible.length === 0 ? (

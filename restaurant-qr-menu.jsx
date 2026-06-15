@@ -137,7 +137,15 @@ function ItemDetail({
           <div className="item-detail-footer">
             <div>
               <p className="item-detail-price-label">Price</p>
-              <p className="item-detail-price">₹{(item.price + (selectedVariant?.price || 0) + selectedAddons.reduce((s, a) => s + a.price, 0)).toFixed(0)}</p>
+              {item.discountPct > 0 ? (
+                <div className="item-detail-price-offer-wrap">
+                  <p className="item-detail-price-original">₹{(item.price + (selectedVariant?.price || 0) + selectedAddons.reduce((s, a) => s + a.price, 0)).toFixed(0)}</p>
+                  <p className="item-detail-price">₹{((item.price * (1 - item.discountPct / 100)) + (selectedVariant?.price || 0) + selectedAddons.reduce((s, a) => s + a.price, 0)).toFixed(0)}</p>
+                  <span className="menu-item-discount-badge">{item.discountPct}% OFF</span>
+                </div>
+              ) : (
+                <p className="item-detail-price">₹{(item.price + (selectedVariant?.price || 0) + selectedAddons.reduce((s, a) => s + a.price, 0)).toFixed(0)}</p>
+              )}
             </div>
 
             {item.available ? (
@@ -531,7 +539,15 @@ function MenuHeroCarousel({ data }) {
                 </span>
                 <h3 className="menu-carousel__name">{item.name}</h3>
                 {item.desc && <p className="menu-carousel__desc">{item.desc}</p>}
-                <p className="menu-carousel__price">₹{item.price.toFixed(0)}</p>
+                {item.discountPct > 0 ? (
+                  <p className="menu-carousel__price">
+                    <span className="menu-carousel__price-original">₹{item.price.toFixed(0)}</span>
+                    {" "}₹{(item.price * (1 - item.discountPct / 100)).toFixed(0)}
+                    <span className="menu-carousel__discount-badge">{item.discountPct}% OFF</span>
+                  </p>
+                ) : (
+                  <p className="menu-carousel__price">₹{item.price.toFixed(0)}</p>
+                )}
               </div>
             </div>
           );
@@ -793,9 +809,15 @@ function MenuView({
                     {item.desc && <p className="menu-item-desc">{item.desc}</p>}
                   </div>
                   <div className="menu-item-footer">
-                    <span className="menu-item-price">
-                      ₹{item.price.toFixed(0)}
-                    </span>
+                    {item.discountPct > 0 ? (
+                      <div className="menu-item-price-wrap">
+                        <span className="menu-item-price-original">₹{item.price.toFixed(0)}</span>
+                        <span className="menu-item-price menu-item-price--offer">₹{(item.price * (1 - item.discountPct / 100)).toFixed(0)}</span>
+                        <span className="menu-item-discount-badge">{item.discountPct}% OFF</span>
+                      </div>
+                    ) : (
+                      <span className="menu-item-price">₹{item.price.toFixed(0)}</span>
+                    )}
                     <div className="menu-item-actions">
                       <span className={`menu-item-status ${item.available ? "available" : "unavailable"}`}>
                         {item.available ? "Available" : "Sold Out"}
@@ -1298,7 +1320,8 @@ export default function App() {
   const addToCart = (item, variant = null, addons = []) => {
     const addonTotal = addons.reduce((s, a) => s + a.price, 0);
     const variantDelta = variant?.price || 0;
-    const adjustedItem = { ...item, price: item.price + variantDelta + addonTotal, variant, addons };
+    const basePrice = item.discountPct > 0 ? item.price * (1 - item.discountPct / 100) : item.price;
+    const adjustedItem = { ...item, price: basePrice + variantDelta + addonTotal, variant, addons };
     setCart(prev => ({
       ...prev,
       [item.id]: { item: adjustedItem, qty: (prev[item.id]?.qty || 0) + 1 },

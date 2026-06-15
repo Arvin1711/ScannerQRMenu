@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react";
+import { List, LayoutGrid, Search, Info } from "lucide-react";
 import { Button } from "./ui";
 
 export default function MenuCategories({ data, onPersist }) {
   const [search, setSearch] = useState("");
   const [catError, setCatError] = useState("");
+  const [viewMode, setViewMode] = useState("grid");
 
   // Add modal
   const [showAddModal, setShowAddModal] = useState(false);
@@ -101,9 +103,7 @@ export default function MenuCategories({ data, onPersist }) {
 
         <div className="categories-toolbar">
           <div className="categories-search-wrap">
-            <svg className="cat-search-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
-            </svg>
+            <Search size={15} className="cat-search-icon" />
             <input
               className="cat-search-input"
               value={search}
@@ -114,6 +114,24 @@ export default function MenuCategories({ data, onPersist }) {
             {search && (
               <button className="cat-search-clear" onClick={() => setSearch("")} aria-label="Clear search">×</button>
             )}
+          </div>
+          <div className="view-toggle" role="group" aria-label="View mode">
+            <button
+              className={viewMode === "list" ? "active" : ""}
+              onClick={() => setViewMode("list")}
+              aria-pressed={viewMode === "list"}
+              title="List view"
+            >
+              <List size={15} />
+            </button>
+            <button
+              className={viewMode === "grid" ? "active" : ""}
+              onClick={() => setViewMode("grid")}
+              aria-pressed={viewMode === "grid"}
+              title="Grid view"
+            >
+              <LayoutGrid size={15} />
+            </button>
           </div>
           <Button variant="primary" size="md" onClick={openAddModal}>
             + Add Categories
@@ -129,12 +147,15 @@ export default function MenuCategories({ data, onPersist }) {
         </p>
       )}
 
-      <ul className="categories-list" aria-label="Categories">
+      <ul className={`categories-list categories-list--${viewMode}`} aria-label="Categories">
         {filtered.map((cat) => {
           const count = (data.items || []).filter((i) => i.category === cat).length;
           const avail = (data.items || []).filter((i) => i.category === cat && i.available).length;
           return (
             <li key={cat} className="category-item">
+              <div className="cat-card-top" aria-hidden="true">
+                <span className="cat-card-initial">{cat.charAt(0).toUpperCase()}</span>
+              </div>
               <div className="cat-info">
                 <span className="cat-name">{cat}</span>
                 <span className="cat-stats">{count} item{count !== 1 ? "s" : ""} · {avail} available</span>
@@ -199,9 +220,7 @@ export default function MenuCategories({ data, onPersist }) {
               />
               {editError && <p className="cat-modal-error">{editError}</p>}
               <p className="cat-modal-note">
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
-                </svg>
+                <Info size={13} />
                 All menu items in this category will be updated automatically.
               </p>
               <div className="cat-modal-footer">
